@@ -1,0 +1,155 @@
+Troubleshooting Slow Performance Using Page Request Profiling | Confluence Data Center and Server 8.5 | Atlassian Documentation
+Products
+Confluence Support
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Confluence 8.5 (Latest)
+Documentation
+Unable to load
+Atlassian Support
+Confluence 8.5
+Documentation
+Confluence administrator's guide
+Performance Tuning
+Troubleshooting Slow Performance Using Page Request Profiling
+Cloud
+Data Center and Server 8.5
+Versions
+8.5
+8.4
+8.3
+8.2
+8.1
+8.0
+7.20
+7.19
+7.18
+7.17
+7.16
+7.15
+7.14
+7.13
+See all
+Troubleshooting Slow Performance Using Page Request Profiling
+Performance Tuning
+Confluence guardrails
+Cache Performance Tuning
+Memory Usage and Requirements
+Requesting Performance Support
+Troubleshooting Slow Performance Using Page Request Profiling
+Compressing an HTTP Response within Confluence
+Garbage Collector Performance Issues
+Confluence Diagnostics
+Faster permissions service
+On this page
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+This page tells you how to enable page-request profiling. With profiling turned on, you will see a record of the time it takes (in milliseconds) to complete each action made on any Confluence page. If Confluence is responding slowly, an internal timing trace of the slow page request can help to identify the cause of the delay.You will need access to the Confluence server to view a profile.Enable page-request profiling
+On this page:
+Related pages:Requesting Performance SupportWorking with Confluence Logs
+You need System Administrator global permissions to enable or disable profiling.To enable or disable page profiling:Go to Administration  > General Configuration > Logging and Profiling.If you run Confluence in a cluster, select a cluster node.Choose Enable Profiling or Disable Profiling.Screenshot: Changing Log Levels and ProfilingProfiling an ActivityEnable profiling, using either of the methods described above.Profiles for every page hit, for all users, will now be logged to your application server's default logs until Confluence is restarted. Note that each time a user visits a link, a single profile is printed.Confirm that profiles are being written to the Confluence log file — see Working with Confluence Logs for location of the log files and other details.Perform the activity that is resulting in unusually slow response time.Copy the profile for that action. When deciding which profiles to copy, look for the links that took a long time to respond. If a single page is slow, only that profile is necessary. If Confluence is generally or intermittently slow, copy all profiles logged during the slowdown until a reasonable sample has been collected.If you were instructed to profile your instance by Atlassian technical support, attach all relevant profiles to your support ticket.Turn profiling off again, using either of the methods described above.Confirm that profiles are no longer being printed to the Confluence log file.Example of a ProfileBelow are the first few lines of a normal profile for accessing a page called Confluence Overview.
+[344ms] - /display/ds/Confluence+Overview
+[313ms] - SiteMesh: parsePage: http://localhost:8080/display/ds/Confluence+Overview
+[313ms] - XW Interceptor: Before defaultStack: /pages/viewpage.action (ViewPageAction.execute())
+[0ms] - SpaceAwareInterceptor.intercept()
+[16ms] - PageAwareInterceptor.intercept()
+[0ms] - AOP: PageManager.getPage()
+[16ms] - AOP: PermissionManager.hasPermission()
+[0ms] - AOP: SpacePermissionManager.hasPermission()
+[16ms] - AOP: SpacePermissionManager.hasPermission()
+[0ms] - AOP: SpacePermissionManager.hasPermission()
+[0ms] - AOP: SpacePermissionManager.hasPermission()
+[281ms] - XW Interceptor: After defaultStack: /pages/viewpage.action (ViewPageAction.execute())
+[281ms] - XW Interceptor: After validatingStack: /pages/viewpage.action (ViewPageAction.execute())
+...
+Notice that each indented line is a recursive call that rolls up into the parent line. In the example above, the Confluence Overview page takes 344ms. Part of that, 313ms, is spent in sitemesh. Start Confluence with Profiling EnabledThere may be some situations where you may wish to have Confluence profiling enabled during startup. This may be useful if you restart often and may forget to enable profiling for Support/Trouble-shooting purposes.Edit the file CONFLUENCE_INSTALL\confluence\WEB-INF\web.xml. You should see a section similar to the one below. Set the parameter value for autostart to true:
+<filter>
+<filter-name>profiling</filter-name>
+<filter-class>com.atlassian.confluence.util.profiling.ConfluenceProfilingFilter</filter-class>
+<init-param>
+<!-- specify the which HTTP parameter to use to turn the filter on or off -->
+<!-- if not specified - defaults to "profile.filter" -->
+<param-name>activate.param</param-name>
+<param-value>profile</param-value>
+</init-param>
+<init-param>
+<!-- specify the whether to start the filter automatically -->
+<!-- if not specified - defaults to "true" -->
+<param-name>autostart</param-name>
+<param-value>true</param-value>
+</init-param>
+</filter>
+Remember to turn it back to false or your logs will grow very large.Identify slow performing macrosPage profiling gives good detail on what operations are slow in a page load. In addition, you can add debug level logging to help identify slow performing macros. Go to Administration  > General Configuration > Logging and Profiling.If you run Confluence in a cluster, select a cluster node.Add the com.atlassian.renderer.v2.components.MacroRendererComponent package, and set the level to DEBUG.
+Last modified on Mar 15, 2023
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

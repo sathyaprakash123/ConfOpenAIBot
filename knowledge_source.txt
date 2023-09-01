@@ -1,0 +1,11 @@
+https://confluence.atlassian.com/confkb/troubleshooting-confluence-performance-issues-with-thread-dumps-688882387.html
+https://confluence.atlassian.com/support/create-a-support-zip-790796819.html
+https://confluence.atlassian.com/doc/troubleshooting-slow-performance-using-page-request-profiling-200987.html
+https://community.atlassian.com/t5/Data-Center-articles/5-tips-to-optimize-the-performance-of-your-Confluence-Data/ba-p/2105387
+https://community.atlassian.com/t5/Confluence-questions/Confluence-performance-issues/qaq-p/1924588
+https://confluence.atlassian.com/confkb/crashes-and-performance-troubleshooting-180846969.html
+https://confluence.atlassian.com/confkb/cluster-panic-due-to-performance-problems-201852128.html
+https://confluence.atlassian.com/confkb/confluence-performance-issues-due-to-scroll-word-export-page-1130730360.html
+https://confluence.atlassian.com/confkb/automatic-indexing-not-working-789095505.html
+https://confluence.atlassian.com/confkb/confluence-reindexing-becomes-stuck-776652081.html
+https://confluence.atlassian.com/confkb/jira-issue-macros-don-t-work-or-timeout-in-confluence-1044107824.html
