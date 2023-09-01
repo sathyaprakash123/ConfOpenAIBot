@@ -13,6 +13,6 @@ os.environ["OPENAI_API_KEY"] = constants.APIKEY
 query = sys.argv[1]
 print("The query is :", query)
 
-loader = DirectoryLoader("/Users/sathya/PycharmProjects/ConfluenceOpenAPIBot/source", glob="*.txt")
+loader = DirectoryLoader("/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source", glob="*.txt")
 index = VectorstoreIndexCreator().from_loaders([loader])
 print(index.query(query, llm=ChatOpenAI()))

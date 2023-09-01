@@ -1,0 +1,118 @@
+Jira issue macros don't work or timeout in Confluence | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+Jira issue macros don't work or timeout in Confluence
+Jira issue macros don't work or timeout in Confluence
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+Platform notice: Server and Data Center only. This article only applies to Atlassian products on the server and data center platforms.
+This page captures multiple issues which Jira macros can encounter in Confluence. These can be like follows or any other kind.
+Unable to render Jira issue macros. Connection to Jira has timed out.
+Refresh didn't work. Try again or click an issue to see it in Jira
+These error messages in Confluence can be very vague and this guide can help narrow down the root cause of the issue. Some error messages are very straight forward like can't locate Jira server. They suspect more towards total lack of connectivity. Nevertheless, this guide will still be useful to diagnose it.DiagnosisAlmost always HTTP debug logging will be required from both Confluence and Jira to understand the nature of the issue. This can be enabled by going through the following steps.In Jira, turn on Jira HTTP access and dump logsSystem > Logging and ProfillingEnable HTTP access logsThen, Enable HTTP dump logs In Confluence, navigate to General Configuration > Logging and Profiling Under Class/Package Name add org.apache.http and set Level to DebugReproduce the issue by refreshing the page or repeating the action and capture a HAR fileConfluence will be logging requests to Jira like follows after the above steps.
+2019-09-23 09:42:49,764 DEBUG [JIM Marshaller:thread-340] [http.impl.execchain.MainClientExec] execute Executing request GET /sr/jira.issueviews:searchrequest-xml/temp/SearchRequest.xml?tempMax=1000&returnMax=true&jqlQuery=project+in+%28CLS%2C+TRAIN%2C+CTB%2C+OAG%29+AND+assignee+in+%28admin%29+AND+%28resolution+is+EMPTY+OR+%28resolutionDate+%3E+-2w%29%29+AND+%28updatedDate+%3E+-2w%29+ORDER+BY+%22Updated%22+Desc++++++++++++++++++++++++++++++++++++++++++&field=summary&field=type&field=updated&field=assignee&field=status&field=allcustom&field=last+comment&field=link&xoauth_requestor_id=admin HTTP/1.1
+This request contains the exact JQL/filter specified on the page of Confluence. The response of this request will help decide the troubleshooting steps required. Some of the most common ones are mentioned below.HTTP Backend timeoutConfluence by default has an HTTP timeout of 10 seconds. This is how long Confluence will wait for a response from Jira. In case the JQL/filter specified in macro is complex, Jira can take a long time to process and send data back. If it exceeds 10 seconds, we will see the following error.
+2019-09-23 09:42:59,777 DEBUG [JIM Marshaller:thread-340] [org.apache.http.wire] wire http-outgoing-34892 << "[read] I/O error: Read timed out"
+To resolve this, follow the guide to Resolve timeouts in Jira Issue Macros and increase this backend timeout.Frontend timeoutIn case there are several Jira issue macros/gadgets on the page, there will be multiple requests going to Jira. Confluence front end has a hardcoded limit of 1 minute to wait for all the data to be received. This means that if Jira is transmitting back data but all of it has not been received by Confluence under a minute then the browser will not render it. This behaviour is being discussed in this bug report
+CONFSERVER-59016
+-
+Getting issue details...
+STATUS
+There are two ways to verify it,org.apache.http DEBUG logs in Confluence. We will see data being returned by Jira way after a minuteHAR file captured in the diagnosis section shows requests to the following endpoint but none of them has a 200 OK response
+<BaseURL>/rest/jiraanywhere/1.0/jira/clientIds/
+If HAR file shows at least one 200 OK response, then we shouldn't expect frontend to be timing out.Data issuesSometimes data by Jira is not parseable by Confluence. This can happen when Jira is behind a network device (like CDN) or authentication layer (like SSO).
+Response from Jira behind another auth layer (2FA)
+2020-04-30 11:01:15,646 DEBUG [JIM Marshaller:thread-123] [org.apache.http.wire] wire http-outgoing-35921 << "Location: /plugins/servlet/twofactor/public/pinvalidation?target=%2Fsr%2Fjira.issueviews%3Asearchrequest-xml%2Ftemp%2FSearchRequest.xml%3FtempMax%3D1000%26returnMax%3Dtrue%26validateQuery%3Dfalse%26jqlQuery%3DKEY%2BIN%2B%2528IT-1273%2529%26field%3Dtype%26field%3Dsummary%26field%3Dstatus%26field%3Dresolution%26field%3Dstatuscategory%26field%3Dlink%26xoauth_requestor_id%3Dadmin[\r][\n]"
+Response from Jira behind a CDN
+2019-10-30 22:23:09,045 DEBUG [JIM Marshaller:thread-9078] [org.apache.http.wire] wire http-outgoing-108385 << "HTTP/1.1 302 Moved Temporarily[\r][\n]"
+.
+2019-10-30 22:23:09,046 DEBUG [JIM Marshaller:thread-9078] [org.apache.http.wire] wire http-outgoing-108385 << "Location: https://media123.cdn.com/cdn-cgi/access...
+.
+2019-10-30 22:23:09,047 DEBUG [JIM Marshaller:thread-9078] [org.apache.http.wire] wire http-outgoing-108385 << "Server: cloudCDN [\r][\n]"
+These issues should be dealt by proper configuration of the relevant component. For instance, SSO apps should whitelist requests from Confluence and shouldn't prompt for another authentication. Similarly, for CDN a rule should be set to not intervene incoming requests from Confluence. Other IssuesThere can be some other issues related to timeouts as well like
+CONFSERVER-53469
+-
+Getting issue details...
+STATUS
+. If data is being received successfully by Confluence but not displayed on the page, then we can start looking into this. If you encounter any other issues which are not covered in this guide, reach out to Atlassian Support with Support zips from Confluence & Jira, along with the HAR file. Ensure that DEBUG logging is enabled while capturing HAR file.
+Last modified on Jul 6, 2021
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

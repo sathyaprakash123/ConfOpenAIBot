@@ -1,0 +1,99 @@
+Confluence performance issues due to Scroll Word Export page | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+Confluence performance issues due to Scroll Word Export page
+Confluence performance issues due to Scroll Word Export page
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+Platform notice: Server and Data Center only. This article only applies to Atlassian products on the server and data center platforms.
+SummaryConfluence experiencing performance issues due to Scroll Word Page Exports.EnvironmentConfluence server or Data Center version 7.13.2DiagnosisFrom the application logs, we can clearly observe issues around Scroll Word Page Export which bumped into errors -
+XXXX-XX-XX XX:XX:XX,922 WARN [scroll-office-export:thread-2] [scroll.words.exporter.WordsExporter] exportPage Error when rendering replacement '$scroll.metadata.(rev)'
+– pageId: XXXXXXXX | url: /plugins/servlet/scroll-office/api/exports | traceId: af68e2812e72f4da | userName: XXXXXXX | jobId: 9285ab7a-8bcf-437e-876a-18f027b686c5
+com.k15t.scroll.exporter.api.replacement.ReplacementException: No metadata value for key 'rev'.
+at com.k15t.scroll.exporter.api.replacement.MetadataPlaceholder.invoke(MetadataPlaceholder.java:125)
+at com.k15t.scroll.words.exporter.WordsExporter.exportPage(WordsExporter.java:414)
+at com.k15t.scroll.words.exporter.WordsExporter.export(WordsExporter.java:375)
+...
+Also, from the GC logs, we can see big memory pressure (Full GC peaks are uneven) under Confluence around the same time and under extreme memory pressure cases, this may also cause to observe Fake OOM error as documented under -
+Atlassian Support Jira Software 8.22 JIRA Knowledge Base JIRA Application Administration Knowledge Base JIRA Running out of memory due to GC / Allocation race condition.CauseThe Scroll Page Export request crashed for some reason but then the memory related to it got leaked and we can observe a large chunk of heap occupied by Scroll Page Export requests under heap dump. Due to this, as more and more requests end up with this behavior, we can see a lot of memory pressure and Confluence performance will degrade with time. SolutionPlease reach out to the Scroll Word Export Support Team to check this and in case this is frequently causing performance issues, see if we can disable this plugin temporarily. You can also refer to some control measures as shared by the Scroll Team i.e and check if this helps. Control how many exports can be performed at the same timeRestrict the number of pages that can be exported in a single export
+Last modified on Apr 7, 2023
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

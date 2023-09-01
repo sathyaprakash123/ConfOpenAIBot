@@ -1,0 +1,228 @@
+Crashes and Performance Troubleshooting | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+Crashes and Performance Troubleshooting
+Crashes and Performance Troubleshooting
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+Troubleshooting Confluence performance problems requires distinguishing between different kinds of problems. The definitions below will help to clarify the problem for your own research and for the quick resolution of an Atlassian support issue.Confluence "crashed", "hangs" or "went down"The terms crash, hang, and went down do not describe the problem with Confluence specifically enough to help with diagnosing or resolving the problem.See the list of more specific descriptions below to see which matches the problem most closely.Confluence fails to startA very serious problem is a startup issue, where Confluence prints an error message to the logs when it starts and will not respond to any requests at all. If Confluence does not resume processing requests normally after being restarted, follow Confluence Startup Problems Troubleshooting.Articles on Confluence failing to start:
+Page:
+Confluence with JNDI Connector Crashes Under Heavy Load Due to Database Connection Issues
+Page:
+Connections could not be acquired from the underlying database
+Page:
+IBM JDK_1.6 prevents starting on Zlinux Suse Sles10
+Confluence is not respondingIf Confluence is not responding during a period of normal operation, there is usually a serious performance problem on the server which is preventing requests being processed normally. If the server is not responding, the Confluence administrator should follow the Troubleshooting Confluence hanging or crashing guide.Articles that address Confluence not responding:
+Page:
+Confluence crashes due to insufficient disk space and truncated confluence.cfg.xml file
+Page:
+Confluence fails to rebuild index and hangs
+Page:
+Confluence unresponsive after viewing page with Office Connector macros
+Page:
+Confluence unresponsive in virtual environment during garbage collection
+Page:
+Segfault error - Confluence unavailable due to Java crash
+Page:
+Unable to compile Soy template in plugin module
+Page:
+XML backups cause performance problems or 'java.lang.OutOfMemoryError Java heap space'
+Confluence is responding slowlyA performance issue is when Confluence responds slowly to requests. You should take note of whether some kinds of pages load faster than others. If all the pages in the application are slow to respond, review the Troubleshooting Confluence hanging or crashing guide.If Confluence is responding slowly on just a few pages, you can look at Performance Tuning to look for specific performance tuning ideas. This is the point when you should begin to gather all the information in Requesting Performance Support. Troubleshooting Slow Performance Using Page Request Profiling is especially useful when particular pages are loading slowly.Articles that address Confluence responding slowly:
+Page:
+Assigning permissions to a page and People Directory performance is slow due to database latency
+Page:
+Confluence process takes up 100% CPU due to legacy Calendar plugin
+Page:
+Editing a page loads slowly in Internet Explorer
+Page:
+Firefox PicLens plugin causes slow performance of Confluence
+Page:
+Improving dashboard performance
+Page:
+Index flush trigger causes poor performance
+Page:
+Performance impact due to index optimization
+Page:
+Poor performance due to Confluence Usage Tracking plugin
+Page:
+Poor performance from excessive garbage collection in the Excel plugin
+Page:
+Poor performance on bandana table queries
+Page:
+Resizing cache values causes Confluence to become unusable (Confluence 3.0.1, 3.0.2, and 3.1)
+Page:
+Search and dashboard load slowly - index timestamp is not updated due to file permissions
+Page:
+Space Admin is slow to load on large spaces
+Confluence is displaying errors in the UIIf Confluence returns error pages, take note of:which operations in the application return error pageswhich users are affected.If the error pages are displayed only after a long wait, you should look at the Confluence is responding slowly section above. If the error pages return quickly, follow the Troubleshooting Problems and Requesting Technical Support guide.JVM IssuesIf Confluence does not respond to requests at all, the java process for Confluence is no longer running, and there is an hs_err_pid*.log file, the JVM has crashed.Articles that address JVM issues:
+Page:
+'Not enough storage is available to process this command' thrown when using jstack to generate external thread dumps
+Page:
+_Blacklisted JDK versions for Confluence
+Performance Data CollectorThe Performance Data Collector is a server-side, standalone application that exposes a number of REST APIs for collecting performance data. It can be used to collect data, such as thread dumps, disk speed and CPU usage information, to troubleshoot performance problems.See How to use the Performance Data Collector for more information.
+Last modified on Oct 15, 2018
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+In this section
+Performance impact due to index optimization
+Editing a page loads slowly in Internet Explorer
+Space Admin is slow to load on large spaces
+Poor performance on bandana table queries
+Connections could not be acquired from the underlying database
+Improving dashboard performance
+IBM JDK_1.6 prevents starting on Zlinux Suse Sles10
+Index flush trigger causes poor performance
+Confluence unresponsive after viewing page with Office Connector macros
+Poor performance due to Confluence Usage Tracking plugin
+Confluence does not terminate after shutdown script
+XML backups cause performance problems or 'java.lang.OutOfMemoryError Java heap space'
+Poor performance from excessive garbage collection in the Excel plugin
+Confluence crashes due to insufficient disk space and truncated confluence.cfg.xml file
+Firefox PicLens plugin causes slow performance of Confluence
+'Not enough storage is available to process this command' thrown when using jstack to generate external thread dumps
+IBM JDK on Z-Series crashes when importing using the Office Connector
+Confluence fails to rebuild index and hangs
+Search and dashboard load slowly - index timestamp is not updated due to file permissions
+Confluence process takes up 100% CPU due to legacy Calendar plugin
+Resizing cache values causes Confluence to become unusable (Confluence 3.0.1, 3.0.2, and 3.1)
+Assigning permissions to a page and People Directory performance is slow due to database latency
+Confluence crashes due to OutOfMemoryError PermGen space
+Getting message 'Upgrade Failed. Please consult the system logs for details' but didn't attempt upgrade
+Unable to start Confluence Windows service after allocating JVM memory
+Poor performance of People Directory and logins
+Poor performance due to LDAP cache with incorrect key
+Confluence slows and times out during periods of high load due to database connection pool
+MySQL table is marked as crashed and should be repaired
+Database deadlock on Microsoft SQL Server
+Confluence will not start due to fatal error in Confluence cluster
+Viewing pages with view Office macros causes system to hang prior to Confluence 3.3
+Performance and stability issues with Office Connector 1.6 or 1.7
+Configuring a database query timeout
+Confluence crashes due to 'OutOfMemoryError Java heap space' error
+Plugins are disabled at startup and various timeout errors appear in the logs after startup
+Troubleshooting deadlocks in Confluence
+Space or PDF export causes poor performance
+Excessive HashMap with Xwork causes high CPU load
+Troubleshooting Confluence hanging or crashing
+Java crashes
+Segfault error - Confluence unavailable due to Java crash
+Confluence unresponsive in virtual environment during garbage collection
+Confluence starts up with error message Unable to load class for JSP
+CPU Usage Spikes to 100 percent on Virtual Server and Confluence Becomes Unavailable
+Unable to compile Soy template in plugin module
+High traffic to /rest/quickreload/ endpoint after upgrading to Confluence 5
+CacheStatisticsEventPublisher causing CPU spike or slow performance in Confluence 5.4/5.5
+Troubleshooting Confluence performance issues with thread dumps
+Dealing with database connection pool starvation on Oracle DB
+Confluence crashes due to OutOfMemoryError Metaspace
+Use the Correct NIO Protocol Connector in Confluence to Improve Performance
+Poor performance issues with specific pages
+Page with status macro load forever or time out after upgrade to Confluence 5.8.5
+Confluence thread spike and grinds to a halt with Link Preview plugin enabled
+Confluence is causing large CPU usage spikes intermittently on Windows
+Confluence with JNDI Connector Crashes Under Heavy Load Due to Database Connection Issues
+Slow Page Load When It Contains A Lot Of Links
+Long page loading
+Confluence Unresponsive due to stuck Workbox Notifications threads
+How to enable the faster permissions service to improve page load times in Confluence 7.12.3 to 7.15.x
+[Unloading class sun.reflect.GeneratedMethodAccessor] found in Tomcat logs while experiencing performance issues
+ClientAbortException java.net.SocketException broken pipe
+Cluster Panic due to Multiple Deployments
+Cluster Panic due to Performance Problems
+Cluster Safety in a Single Node Standalone Instance
+Confluence crashes and throws 'OutOfMemory: unable to create new native thread' error
+Confluence crashes due to 'OutOfMemoryError GC overhead limit exceeded' error
+Confluence crashes due to CodeCache is full. Compiler has been disabled.
+Confluence crashes on startup after adding Crowd integration jar file into the \lib folder
+Confluence process dies unexpectedly due to Linux OOM-Killer
+Fatal JVM Crash - 'java.lang.OutOfMemoryError .. Out of Swap Space?'
+Getting a blank or white screen when accessing confluence via browser
+High CPU Usage caused by Page Comparison
+How to generate thread dumps using Visual VM
+How to troubleshoot performance issues with thread dumps
+Java crash - EXCEPTION_ACCESS_VIOLATION - VMThread
+Java crashing with no messages in logs
+JDK is outdated - upgrade Java
+JVM crashes during Import from Word in Confluence
+Large images timeout when image effects are applied to them, can cause CPU spike
+SIGSEGV Segmentation Fault JVM Crash
+Too many open files error
+Using the NIO connector in Confluence to improve performance
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

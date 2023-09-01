@@ -14,7 +14,7 @@ def knowledge_gather():
 
 def gather_data_from_url(url):
     print("## Calling gather_data_from_url")
-    dirpath = "/Users/sathya/PycharmProjects/ConfluenceOpenAPIBot/source/"
+    dirpath = "/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source"
     # urllib.request.urlretrieve(url, dirpath + str(uuid.uuid4())+ ".txt")
     # r = requests.get(url)
 
@@ -32,7 +32,7 @@ def gather_data_from_url(url):
     # drop blank lines
     text = '\n'.join(chunk for chunk in chunks if chunk)
     print(text)
-    dir_path = Path("/Users/sathya/PycharmProjects/ConfluenceOpenAPIBot/source/")
+    dir_path = Path("/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source")
     file_path = dir_path.joinpath(str(uuid.uuid4()) + ".txt")
     if dir_path.is_dir():
         with open(file_path, "w") as f:
