@@ -28,7 +28,7 @@ os.environ["OPENAI_API_KEY"] = constants.APIKEY
 query = sys.argv[1]
 print("The query is :", query)
 
-#Letting the directory loader to read data from source
+#Letting the directory loader to read data from source. Change this directory to your local location.
 loader = DirectoryLoader("/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source", glob="*.txt")
 
 # Setting indexing on the text data collected
