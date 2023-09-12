@@ -1,8 +1,11 @@
+# Module to extract data from KB links
+
 from pathlib import Path
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import uuid
 
+# Scraps data from all urls from the knowledge_source.txt file
 
 print("## Knowledge Collector Called")
 def knowledge_gather():
@@ -12,12 +15,15 @@ def knowledge_gather():
             print(url)
             gather_data_from_url(url)
 
+
+# Scraps data from single KB
 def gather_data_from_url(url):
     print("## Calling gather_data_from_url")
     dirpath = "/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source"
     # urllib.request.urlretrieve(url, dirpath + str(uuid.uuid4())+ ".txt")
     # r = requests.get(url)
 
+#Cleans up the data from KB. Removes as much HTML noise as possible so that only the data text is storefd
     with urlopen(url) as response:
         body = response.read()
 
