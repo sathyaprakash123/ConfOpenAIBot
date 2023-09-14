@@ -19,7 +19,7 @@ def knowledge_gather():
 # Scraps data from single KB
 def gather_data_from_url(url):
     print("## Calling gather_data_from_url")
-    dirpath = "/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source"
+    # dirpath = "/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source"
     #urllib.request.urlretrieve(url, dirpath + str(uuid.uuid4())+ ".txt")
     #r = requests.get(url)
 
@@ -48,5 +48,5 @@ def gather_data_from_url(url):
     else:
         print("Directory doesn\'t exist.")
 
-
+# Calling knowledge gather, which will obtain the links from knowledge_source.txt one by one and extract the text content from these links and store them on data.txt
 knowledge_gather()
