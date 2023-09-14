@@ -1,0 +1,282 @@
+How to get a list of active users counting towards the Confluence license | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+How to get a list of active users counting towards the Confluence license
+How to get a list of active users counting towards the Confluence license
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+Platform notice: Server and Data Center only. This article only applies to Atlassian products on the server and data center platforms.
+PurposeTo know the exact users count against your license in Confluence.Confluence's license count is based on Global Permissions. Users will count towards the license in the following ways:If the User is a member of a group that has global permissions to use ConfluenceIf the User is individually granted global permissions to use ConfluenceSolutionConfluence 8.xIn Confluence 8.x, admins can access a list of users counting towards their Confluence license, and these users' last login details.Go to Confluence admin > User management.In the Find User field, put an asterisk (*)In the Filter by field, select Licensed users onlySelect SearchLearn how to track your licensed user count at Managing your Confluence License.
+This behaviour was implemented thanks to feature request:
+CONFSERVER-54271
+-
+Getting issue details...
+STATUS
+Confluence 7.0.2 to 7.20.xIf you're running Confluence 7.0.2 or later, you can write the list of licensed users to the application log. To obtain a list of licensed Confluence users:Go to  > General Configuration > Logging and Profiling.Add an entry for com.atlassian.confluence.user.DefaultUserAccessor  and set the level to DEBUG. Tail your <home-directory>/logs/atlassian-confluence-security.log file. Go to  > General Configuration > License details.Under Licensed users, choose Refresh. In the log file, look for a line similar to the following:
+2019-09-17 10:36:34,271 DEBUG [read-only-transaction:thread-1] [atlassian.confluence.user.DefaultUserAccessor] getUserNamesWithConfluenceAccess Found 3 licensed users: [user1, user2, user3]
+See Configuring Logging for more information on changing the logging and profiling settings in Confluence. Good to knowThis workaround may have a performance impact on your site. You should remove the com.atlassian.confluence.user.DefaultUserAccessor entry once you've successfully written the list of users to the log file. Usernames will be written to your logs in plain text. This may have privacy implications for your site. If you ever need to remove personally identifiable information you'll need to also remove it from the log files.  Confluence 6.15.x and earlierSolution 1If you are using Confluence 3.5 to Confluence 6.15.x, you can use the following SQL queries to return a list of users that count towards the license.Return users that belong to a group which has global permissions:
+This SQL query may not return accurate results if you are using nested groups in LDAP or Crowd, or if you have users with duplicated usernames across multiple directories.
+Postgresql
+MySQL
+SQL server
+SELECT u.lower_user_name, u.email_address, d.directory_name
+FROM cwd_user u
+JOIN cwd_membership m ON u.id = child_user_id
+JOIN cwd_group g ON m.parent_id = g.id
+JOIN SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN cwd_directory d on u.directory_id = d.id
+WHERE sp.PERMTYPE='USECONFLUENCE' AND u.active = 'T' AND d.active = 'T'
+GROUP BY u.lower_user_name, u.email_address, d.directory_name
+ORDER BY d.directory_name;
+The below query lists users, who are counted as part of license AND have logged in at-least once AND their last login date
+SELECT
+u.lower_user_name, u.email_address, d.directory_name, to_timestamp(CAST(cua.attribute_value AS double precision)/1000)
+FROM cwd_user
+u
+JOIN cwd_membership m ON u.id = m.child_user_id
+JOIN cwd_group g ON m.parent_id = g.id
+JOIN SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN cwd_directory d ON u.directory_id = d.id
+JOIN cwd_user_attribute cua ON u.id = cua.user_id
+WHERE sp.PERMTYPE='USECONFLUENCE' AND u.active = 'T' AND d.active = 'T' AND cua.attribute_name = 'lastAuthenticated'
+GROUP BY u.lower_user_name, u.email_address, d.directory_name, cua.attribute_value
+ORDER BY d.directory_name;
+SELECT u.lower_user_name, u.email_address, d.directory_name
+FROM confluence.cwd_user
+u
+JOIN confluence.cwd_membership m ON u.id = m.child_user_id
+JOIN confluence.cwd_group g ON m.parent_id = g.id
+JOIN confluence.SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN confluence.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE='USECONFLUENCE' AND u.active = 'T' AND d.active = 'T'
+GROUP BY u.lower_user_name, u.email_address, d.directory_name
+ORDER BY d.directory_name;
+SELECT u.lower_user_name, u.email_address, d.directory_name
+FROM confluence.dbo.cwd_user u
+JOIN confluence.dbo.cwd_membership m ON u.id = m.child_user_id
+JOIN confluence.dbo.cwd_group g ON m.parent_id = g.id
+JOIN confluence.dbo.SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN confluence.dbo.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE = 'USECONFLUENCE' AND u.active = 'T' AND d.active = 'T'
+GROUP BY u.lower_user_name, u.email_addressd, directory_name
+ORDER BY d.directory_name;
+Return users that were individually granted global permissions:
+PostgreSQL
+MySQL
+SQL server
+SELECT u.lower_user_name,
+d.directory_name
+FROM   spacepermissions sp
+JOIN user_mapping um
+ON sp.permusername = um.user_key
+JOIN cwd_user u
+ON um.lower_username = u.lower_user_name
+JOIN cwd_directory d
+ON u.directory_id = d.id
+WHERE  sp.permtype = 'USECONFLUENCE'
+AND u.active = 'T'
+AND d.active = 'T'
+GROUP  BY u.lower_user_name,
+d.directory_name
+ORDER  BY d.directory_name;
+SELECT u.lower_user_name, d.directory_name
+FROM confluence.SPACEPERMISSIONS sp
+JOIN confluence.user_mapping um ON sp.PERMUSERNAME = um.user_key
+JOIN confluence.cwd_user u ON um.lower_username = u.lower_user_name
+JOIN confluence.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE = 'USECONFLUENCE' AND u.active = 'T' AND d.active = 'T'
+GROUP BY u.lower_user_name, d.directory_name
+ORDER BY d.directory_name;
+SELECT u.lower_user_name, d.directory_name
+FROM confluence.dbo.cwd_user u
+JOIN confluence.dbo.cwd_membership m ON u.id = m.child_user_id
+JOIN confluence.dbo.cwd_group g ON m.parent_id = g.id
+JOIN confluence.dbo.SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN confluence.dbo.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE = 'USECONFLUENCE' AND u.active = 'T' AND d.active = 'T'
+GROUP BY u.lower_user_name, d.directory_name
+ORDER BY d.directory_name;
+Return how many members are counting towards the license.
+PostgreSQL
+MySQL
+SQL server
+SELECT COUNT(distinct cwd_user.user_name),
+cwd_group.group_name
+FROM cwd_group
+INNER JOIN cwd_membership ON cwd_membership.parent_id= cwd_group.id
+INNER JOIN cwd_user ON cwd_user.id = cwd_membership.child_user_id
+WHERE cwd_user.active = 'T'
+AND cwd_user.lower_user_name IN
+(SELECT u.lower_user_name
+FROM cwd_user u
+JOIN cwd_membership m ON u.id = child_user_id
+JOIN cwd_group g ON m.parent_id = g.id
+JOIN SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE='USECONFLUENCE'
+AND u.active = 'T'
+AND d.active = 'T'
+GROUP BY u.lower_user_name,
+d.directory_name)
+GROUP BY cwd_group.group_name
+ORDER BY COUNT(cwd_user.user_name) DESC;
+SELECT COUNT(DISTINCT confluence.cwd_user.user_name) as user_count,
+confluence.cwd_group.group_name
+FROM confluence.cwd_group
+INNER JOIN confluence.cwd_membership ON confluence.cwd_membership.parent_id = cwd_group.id
+INNER JOIN confluence.cwd_user ON confluence.cwd_user.id = confluence.cwd_membership.child_user_id
+WHERE confluence.cwd_user.active = 'T'
+AND confluence.cwd_user.lower_user_name IN (
+SELECT u.lower_user_name
+FROM confluence.cwd_user u
+JOIN confluence.cwd_membership m ON u.id = m.child_user_id
+JOIN confluence.cwd_group g ON m.parent_id = g.id
+JOIN confluence.SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN confluence.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE = 'USECONFLUENCE'
+AND u.active = 'T'
+AND d.active = 'T'
+GROUP BY u.lower_user_name, d.directory_name
+)
+GROUP BY confluence.cwd_group.group_name
+ORDER BY user_count DESC;
+SELECT COUNT(DISTINCT confluence.dbo.cwd_user.user_name) AS user_count,
+confluence.dbo.cwd_group.group_name
+FROM confluence.dbo.cwd_group
+INNER JOIN confluence.dbo.cwd_membership ON confluence.dbo.cwd_membership.parent_id = cwd_group.id
+INNER JOIN confluence.dbo.cwd_user ON confluence.dbo.cwd_user.id = confluence.dbo.cwd_membership.child_user_id
+WHERE confluence.dbo.cwd_user.active = 'T'
+AND confluence.dbo.cwd_user.lower_user_name IN (
+SELECT u.lower_user_name
+FROM confluence.dbo.cwd_user u
+JOIN confluence.dbo.cwd_membership m ON u.id = m.child_user_id
+JOIN confluence.dbo.cwd_group g ON m.parent_id = g.id
+JOIN confluence.dbo.SPACEPERMISSIONS sp ON g.group_name = sp.PERMGROUPNAME
+JOIN confluence.dbo.cwd_directory d ON u.directory_id = d.id
+WHERE sp.PERMTYPE = 'USECONFLUENCE'
+AND u.active = 'T'
+AND d.active = 'T'
+GROUP BY u.lower_user_name, d.directory_name
+)
+GROUP BY confluence.dbo.cwd_group.group_name
+ORDER BY COUNT(DISTINCT cwd_user.user_name) DESC;
+It may include duplicate users depending on the number of groups the user is a member of.Solution 2You may also use the following User Macro pulled from one of our Atlassian Community post to list down the users who are counted towards the license.
+## Macro title: Last Login
+## Macro has a body: N
+## Body processing: Selected body processing option
+## Output: Selected output option
+##
+## Developed by: Andrew Frayling
+## Modified by: Michael Seager [Atlassian Support]
+## Date created: 11/02/2012
+## Installed by: <your name>
+## Macro to display the last login date of users who have access to the current space
+## @noparams
+#set($containerManagerClass = $content.class.forName('com.atlassian.spring.container.ContainerManager'))
+#set($getInstanceMethod = $containerManagerClass.getDeclaredMethod('getInstance',null))
+#set($containerManager = $getInstanceMethod.invoke(null,null))
+#set($containerContext = $containerManager.containerContext)
+#set($loginManager = $containerContext.getComponent('loginManager'))
+#set($users = $userAccessor.getUsers())
+<table class="confluenceTable">
+<tr>
+<th class="confluenceTh">Count</th>
+<th class="confluenceTh">User</th>
+<th class="confluenceTh">Last Successful Login</th>
+</tr>
+#set($count = 0)
+#foreach($user in $users)
+## list the last login date of users who can view the current space
+#if ($permissionHelper.canView($user, $space))
+#set($count = $count + 1)
+<tr>
+<td class="confluenceTd">$count</td>
+<td class="confluenceTd">#usernameLink($user.name)</td>
+<td class="confluenceTd">$action.dateFormatter.formatDateTime($loginManager.getLoginInfo($user.name).lastSuccessfulLoginDate)</td>
+</tr>
+#end
+#end
+</table>
+For more information on writing user macro, please refer to this documentation.
+DescriptionThis article explains exactly which users count against your license in Confluence.ProductBitbucket
+Last modified on Aug 29, 2023
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

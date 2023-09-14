@@ -12,4 +12,5 @@ https://confluence.atlassian.com/confkb/jira-issue-macros-don-t-work-or-timeout-
 https://confluence.atlassian.com/confkb/index-not-working-due-to-journal-state-store-is-corrupt-error-687023405.html
 https://jira.atlassian.com/browse/CONFSERVER-81283
 https://confluence.atlassian.com/confkb/confluence-reindexing-becomes-stuck-776652081.html
+https://confluence.atlassian.com/confkb/how-to-get-a-list-of-active-users-counting-towards-the-confluence-license-298978076.html
 

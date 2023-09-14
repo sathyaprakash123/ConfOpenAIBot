@@ -1,0 +1,128 @@
+Index not working due to 'journal state store is corrupt' error | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+Confluence Indexing Troubleshooting Guide
+Index not working due to 'journal state store is corrupt' error
+Index not working due to 'journal state store is corrupt' error
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+ProblemSearch doesn't include recent pages, and the recently updated macro stops working.The following appears in the atlassian-confluence.log:
+WARN [http-bio-8090-exec-3] [confluence.impl.journal.DefaultJournalManager] enqueue Newly enqueued entry in journal
+[main_index] has an ID [X] that should have been higher than the journal state store's most-recent-id [Y]. it is
+likely that this node's journal state store is corrupt.
+CauseThe journal is used to track changes made in Confluence. This is particularly useful in Data Center installations, in which each node checks this log index roughly every five seconds, and then  update its own index accordingly.This issue occurs when there is an entry in the journal with an ID higher than what the journal is expecting. This can be due to a corruption of the Confluence index itself. Or, it can be an issue with your database setup.Alternatively, if you are using an Oracle RAC database, you may be encountering this bug:
+CONF-35764
+-
+Getting issue details...
+STATUS
+Resolution 1Shutdown Confluence (on all nodes, if using Data Center)Move or rename journal directory located at <CONF_HOME_Dir>/ Rebuild content indexes from scratch (on all nodes)Restart ConfluenceRebuild index from Administration menuResolution 2: Oracle RACFollow the workaround from
+CONF-35764
+-
+Getting issue details...
+STATUS
+Change SEQ_JOURNAL_ENTRY_ID sequence to be ordered: ALTER SEQUENCE SEQ_JOURNAL_ENTRY_ID ORDER;Rebuild index.
+Resolution 3: Postgres Sequence CachePostgres does not sequentially create IDs by default, so a sequence needs to be set up in the DB.  Postgres should create IDs 1 at a time to make sure they are sequential.  If your DB was somehow changed to create more than 1 at a time, it can start to create these non-sequentially.To Confirm:Enable DEBUG logging in Confluence on the following packages:
+com.atlassian.bonnie.search.extractor
+com.atlassian.confluence.search.lucene
+com.atlassian.confluence.internal.index.AbstractBatchIndexer
+com.atlassian.confluence.impl.journal
+Make a few changes in confluence, such as editing several pages.Check the logs.  You should see each change logged with a journal entry ID:
+2019-07-29 07:40:46,967 DEBUG [http-nio-127.0.0.1-8090-exec-5] [confluence.impl.journal.DefaultJournalManager] enqueue Enqueued JournalEntry: JournalEntry{id=5936925, journalId='JournalIdentifier{journalName=edge_index}', creationDate=Mon Jul 29 07:40:46 MDT 2019, type='ADD_DOCUMENT', message='{"edgeId":"162070548","userKey":"1c0c8294582c611c015847a7c66e0032","targetId":162070548,"date":1564407548478,"typeKey":"page.create"}'}
+2019-07-29 07:40:51,108 DEBUG [http-nio-127.0.0.1-8090-exec-8] [confluence.impl.journal.DefaultJournalManager] enqueue Enqueued JournalEntry: JournalEntry{id=5936863, journalId='JournalIdentifier{journalName=main_index}', creationDate=Mon Jul 29 07:40:51 MDT 2019, type='ADD_CHANGE_DOCUMENT', message='com.atlassian.confluence.pages.Page-162070546'}
+In the logs above, you can see the first entry was given an ID of 5936925, and the second, 5936863.  This is not only non-sequential, but a big jump.Check the sequence in Postgres by exporting the schema/generating a DDL. Or run this command:
+Postgres versions below 10
+SELECT cache_value FROM seq_journal_entry_id;
+Postgres 10 and above
+SELECT cache_size FROM pg_catalog.pg_sequences
+WHERE sequencename='seq_journal_entry_id';
+The sequence should look like this:
+CREATE SEQUENCE public.seq_journal_entry_id
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+If the CACHE value is anything other than 1, Postgres may generate IDs in the wrong order.To Fix:Shut down ConfluenceRun the following query to update the Postgres Sequence:
+ALTER SEQUENCE public.seq_journal_entry_id CACHE 1;
+Follow the steps on rebuilding the index from scratchRe-enable the DEBUG logging mentioned aboveVerify that journal IDs are now created in sequential order.
+Last modified on Jan 3, 2022
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian

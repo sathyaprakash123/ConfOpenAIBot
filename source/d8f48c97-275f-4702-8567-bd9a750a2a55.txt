@@ -1,0 +1,96 @@
+Cluster Panic due to Performance Problems | Confluence | Atlassian Documentation
+Products
+Confluence Support
+Get started
+Documentation
+Knowledge base
+Resources
+Search
+Log in
+View account
+View requests
+Log out
+...
+Get started
+Knowledge base
+Products
+Jira Software
+Project and issue tracking
+Jira Service Management
+Service management and customer support
+Jira Work Management
+Manage any business project
+Confluence
+Document collaboration
+Bitbucket
+Git code management
+See all
+Resources
+Documentation
+Usage and admin help
+Community
+Answers, support, and inspiration
+System Status
+Cloud services health
+Suggestions and bugs
+Feature suggestions and bug reports
+Marketplace
+Product apps
+Billing and licensing
+Frequently asked questions
+Log out
+Log in to account
+Contact support
+Training & Certification
+Cloud Migration Center
+GDPR guides
+Enterprise services
+Atlassian partners
+Developers
+User groups
+Automation for Jira
+Atlassian.com
+Page
+View in Confluence
+Edit Page
+Viewport
+Manage Viewport
+Confluence
+Dashboard
+Space Directory
+People Directory
+Atlassian Support
+Confluence Knowledge Base
+Crashes and Performance Troubleshooting
+Cluster Panic due to Performance Problems
+Cluster Panic due to Performance Problems
+Related content
+No related content found
+Still need help?
+The Atlassian Community is here for you.
+Ask the community
+This article requires fixes
+This article has been Flagged for fixing. Use caution when using it and fix it if you have Publisher rights.
+Symptoms
+There are multiple causes for this issue. Start with the parent article Confluence will not start due to fatal error in Confluence cluster.
+Confluence throws the following error on a single-node deployment spontaneously during production usage:
+Fatal error in Confluence cluster: Database is being updated by an instance which is not part of the current cluster. You should check network connections between cluster nodes, especially multicast traffic.
+CauseThere are several performance problems that can cause this error. They are listed in the order of most likely to least likely:If you are on Confluence 3.0.1 or 3.0.2, you are most likely experiencing a bug. See Cluster panics (Non Clustered Confluence 2.10.4, 3.0.1 and 3.0.2).The database is overloaded or the database connection has been severed.The database is being accessed by another Confluence instance.An out of memory error has occurred.In some conditions, severely poor garbage collection performance can contribute to this.The daily sql dump backup job (in a native tool) is running. This is very unlikely, and should be addressed only as a last resort.Temporary WorkaroundRun Confluence as a single node cluster.ResolutionsThere are multiple resolutions for this problem:Ensure you have the patch from Cluster panics (Non Clustered Confluence 2.10.4, 3.0.1 and 3.0.2).If you have the word 'Deadlock' in your atlassian-confluence.log, see Troubleshooting deadlocks in Confluence.Upgrading or optimizing the database has corrected this in many situations.If you find OutOfMemory in your atlassian-confluence.log, see Fix Out of Memory errors by Increasing Available Memory.Assess poor garbage collection performance. Check Garbage Collector Performance Issues.Only in rare circumstances, and when you can reliably replicate the problem, the workaround is to take the application offline while generating the backup.
+Last modified on Oct 16, 2021
+Was this helpful?
+Yes
+No
+It wasn't accurate
+It wasn't clear
+It wasn't relevant
+Provide feedback about this article
+Related content
+No related content found
+Powered by Confluence and Scroll Viewport.
+Atlassian
+Notice at Collection
+Privacy Policy
+Terms of Use
+Security
+©
+Atlassian
