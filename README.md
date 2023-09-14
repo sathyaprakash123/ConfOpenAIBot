@@ -7,12 +7,16 @@ Bot is designed to provide troubleshooting steps for Confluence issues based on 
 3. knowledge_collector.py is the python script that extracts data and stores it under the source folder as text files
 4. ConfAPI.py is the python script that receives the query from user and uses the data from the source folder to provide a topic specific response. The syntax of usage is : python3 ConfAPI.py "user query about confluence"
 
-   **Pre-requisites**
+ **Pre-requisites**
 Install the following libraries. Python might request installation of more libraries while running the script, do please install them as well
 
 1. Install Python3 version: 3.11.3
 2. pip3 install langchain
 3. pip3 install beautifulsoup4
+4. pip3 install openai
+5. pip3 install unstructured
+6. pip3 install chromadb
+7. pip3 install tiktoken
 
 Steps to run:
 
