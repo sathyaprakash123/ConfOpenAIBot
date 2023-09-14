@@ -1,2 +1,2 @@
 #APIKEY = "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"
-APIKEY = "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"
+APIKEY = "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"

@@ -24,15 +24,15 @@ from urllib.request import urlopen
 # Reading the open API Key from constants
 os.environ["OPENAI_API_KEY"] = constants.APIKEY
 
-#Getting the query from the system parameters
+#Getting the customer query from the system parameters
 query = sys.argv[1]
 print("The query is :", query)
 
 #Letting the directory loader to read data from source. Change this directory to your local location.
 loader = DirectoryLoader("/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source", glob="*.txt")
 
-# Setting indexing on the text data collected
+# Setting indexing on the text data collected for easier processing
 index = VectorstoreIndexCreator().from_loaders([loader])
 
-#Printing the query response from Chatbot
+#Printing the query response from Chatbot. The llm= ChatOpenAI will ensure that the language model is applied on top of the Confluence training data obtained from the source files
 print(index.query(query, llm=ChatOpenAI()))
