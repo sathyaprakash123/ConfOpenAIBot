@@ -9,3 +9,7 @@ https://confluence.atlassian.com/confkb/confluence-performance-issues-due-to-scr
 https://confluence.atlassian.com/confkb/automatic-indexing-not-working-789095505.html
 https://confluence.atlassian.com/confkb/confluence-reindexing-becomes-stuck-776652081.html
 https://confluence.atlassian.com/confkb/jira-issue-macros-don-t-work-or-timeout-in-confluence-1044107824.html
+https://confluence.atlassian.com/confkb/index-not-working-due-to-journal-state-store-is-corrupt-error-687023405.html
+https://jira.atlassian.com/browse/CONFSERVER-81283
+https://confluence.atlassian.com/confkb/confluence-reindexing-becomes-stuck-776652081.html
+

@@ -19,9 +19,7 @@ def knowledge_gather():
 # Scraps data from single KB
 def gather_data_from_url(url):
     print("## Calling gather_data_from_url")
-    # dirpath = "/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source"
-    #urllib.request.urlretrieve(url, dirpath + str(uuid.uuid4())+ ".txt")
-    #r = requests.get(url)
+
 
     #Cleans up the data from KB. Removes as much HTML noise as possible so that only the data text is storefd
     with urlopen(url) as response:

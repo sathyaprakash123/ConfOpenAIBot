@@ -80,7 +80,6 @@ Versions
 7.16
 7.15
 7.14
-7.13
 See all
 Troubleshooting Slow Performance Using Page Request Profiling
 Performance Tuning
