@@ -1,2 +1,3 @@
-#APIKEY = "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"
-APIKEY = "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"
+from os import environ
+APIKEY = environ['OPENAI_API_KEY']
+# APIKEY = "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"

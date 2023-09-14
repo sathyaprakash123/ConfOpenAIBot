@@ -17,6 +17,9 @@ Install the following libraries. Python might request installation of more libra
 5. pip3 install unstructured
 6. pip3 install chromadb
 7. pip3 install tiktoken
+8. pip3 install flask
+
+Or check the requirements.txt
 
 Steps to run:
 
@@ -24,3 +27,14 @@ Steps to run:
 2. Ensure that the path location from knowledge_collector.py, line 40, points to the source folder on the local machine (same location as above)
 3. run python3 knowledge_collector.py so that data is gathered and stored under source folder
 4. You can then ask any query such as : python3 ConfAPI "confluence is slow" 
+
+Using flask:
+1. If there are no files under the source directory, run knowledge collector.py to generate them
+2. export your OPENAI API Key:
+export OPENAI_API_KEY=<your_key>
+3. Change directory to the root of the project (The director that contains app.py)
+4. Start the flask server:
+python3 app.py
+5. Open a browser and navigate to localhost:5000
+http://127.0.0.1:5000/
+6. Ask your question . . . . 

@@ -37,7 +37,7 @@ def gather_data_from_url(url):
     # drop blank lines
     text = '\n'.join(chunk for chunk in chunks if chunk)
     print(text)
-    dir_path = Path("/Users/sganeshan/Documents/ConfSupportBot/ConfOpenAIBot/source")
+    dir_path = Path("source")
     file_path = dir_path.joinpath(str(uuid.uuid4()) + ".txt")
     if dir_path.is_dir():
         with open(file_path, "w") as f:
